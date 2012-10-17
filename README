@@ -1,0 +1,7 @@
+################
+insight_reloaded
+################
+
+A full async docsplit previewer server based on Tornado and Redis
+
+* Insight Reloaded project: https://github.com/novagile/insight-reloaded/
