@@ -20,5 +20,5 @@ If the document preview is not ready, we want a 404 error.
 
 We will get the document preview url with a callback.
 
-.. image:: docs/_static/InsightReloaded.png
+.. image:: insight-reloaded/docs/_static/InsightReloaded.png
 .. _Insight: https://github.com/novagile/insight
