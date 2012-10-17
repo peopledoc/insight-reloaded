@@ -13,8 +13,8 @@ and async previews generations from an url with caching.
 The system is able to register engines so that we can manipulate
 documents on the flow.
 
-The idea of Insight-Reloaded is to remove the async mode and delegate
-it to Nginx.
+The idea of Insight-Reloaded is to remove the sync mode and delegate
+it to Nginx with disk or S3 storage.
 
 If the document preview is not ready, we want a 404 error.
 
