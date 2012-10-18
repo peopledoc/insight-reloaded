@@ -6,8 +6,6 @@ import tornado.httpserver
 
 import json
 
-from insight_reloaded.lib import TornadoArgumentsWrapper
-
 try:
     import settings
 except ImportError:
