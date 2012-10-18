@@ -13,10 +13,14 @@ def read_relative_file(filename):
 name = 'insight_reloaded'
 version = read_relative_file('VERSION').strip()
 readme = read_relative_file('README')
-requirements = ['setuptools', 'tornado']
+requirements = ['setuptools', 'tornado', 'tornado-redis',
+                'requests', 'redis']
 entry_points = {
     'console_scripts': [
-        'insight_api = insight_reloaded.api:main']
+        'insight_api = insight_reloaded.api:main',
+        'insight = insight_reloaded.worker:main',
+        'fake_callback = insight_reloaded.fake_callback:main',
+        ]
     }
 
 
