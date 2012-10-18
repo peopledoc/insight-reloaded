@@ -2,8 +2,8 @@
 """Preview documents"""
 
 import logging
-from os import path, chdir, listdir, rename, makedirs
-from shutil import rmtree, copyfile
+from os import path, chdir, listdir, makedirs
+from shutil import rmtree, copyfile, move
 from tempfile import mkdtemp
 import hashlib
 import random
@@ -64,8 +64,8 @@ class DocumentPreview(object):
                 filename_end = f.split('_')[-1]  # <page_num>.png
                 page_num = filename_end[:-4]  # remove the '.png' extension
                 new_name = 'document_%s_p%s.png' % (size, page_num)
-                rename(path.join(folder, f),
-                       path.join(self.destination_folder, new_name))
+                move(path.join(folder, f),
+                     path.join(self.destination_folder, new_name))
         if self.crop:
             self.add_crop()
 
@@ -86,7 +86,7 @@ class DocumentPreview(object):
             msg = u"[PREVIEW] Error while cropping %s: %s. Output: %r" % (
                     tmp_file, e, e.output)
             raise PreviewException(msg)
-        rename(tmp_file, cropped)  # put in preview folders
+        move(tmp_file, cropped)  # put in preview folders
 
     def get_num_pages(self):
         """Return the number of pages for the document"""
