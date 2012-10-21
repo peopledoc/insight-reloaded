@@ -27,8 +27,8 @@ def abort(exception, requested_ressource, callback_url=None):
                                     'requested_ressource': requested_ressource})
         except requests.exceptions.ConnectionError:
             pass
-    raise requests.exceptions.ConnectionError('%s : %s' % (requested_ressource, 
-                                                           exception.message))
+    raise InsightWorkerException('%s : %s' % (requested_ressource, 
+                                              exception.message))
 
 def main():
     print "Launch insight worker"
