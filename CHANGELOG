@@ -1,5 +1,13 @@
 Changelog
 =========
 
-0.1 (unreleased)
+0.1 (2012-10-22)
 ----------------
+
+* Raise an InsightWorkerException instead of a ConnectionError
+* Use shutil.move instead of os.rename to avoid cross filesystem link error
+* First version of insight_reloaded
+* First answer from tornado
+* Add base configuration
+* Add the right image url
+* Add README
