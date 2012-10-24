@@ -33,4 +33,5 @@ Server provisioning
 ===================
 
 You can find insight-reloaded chef cookbooks here : https://github.com/novagile/insight-installer
+
 This will helps you install all requirements to run your insight-reloaded server.
