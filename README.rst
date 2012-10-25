@@ -26,16 +26,16 @@ We will get the document preview url with a callback.
 The API
 =======
 
-The API is that simple:
+The API is that simple::
 
     curl -X GET "http://localhost:8888/?url=http://my_file_url.com/file.pdf&callback=http://requestb.in/12vsewg"
     {"insight_reloaded": "Job added to queue.", "number_in_queue": 14}
 
     curl -X GET http://localhost:8888/status
-	{"insight_reloaded": "There is 14 job in the queue.", "number_in_queue": 14}
+    {"insight_reloaded": "There is 14 job in the queue.", "number_in_queue": 14}
 
-	curl -X GET http://localhost:8888/
-	{"version": "0.2dev", "insight_reloaded": "Bonjour", "name": "insight-reloaded"}
+    curl -X GET http://localhost:8888/
+    {"version": "0.2dev", "insight_reloaded": "Bonjour", "name": "insight-reloaded"}
 
 
 Service architecture
