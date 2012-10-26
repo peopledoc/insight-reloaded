@@ -7,16 +7,7 @@ import tornado.ioloop
 import tornado.gen
 import tornado.httpserver
 
-try:
-    import settings
-except ImportError:
-    settings = None
-
-REDIS_HOST = getattr(settings, 'REDIS_HOST', 'localhost')
-REDIS_PORT = getattr(settings, 'REDIS_PORT', 6379)
-REDIS_DB = getattr(settings, 'REDIS_PORT', 0)
-REDIS_QUEUE_KEY = getattr(settings, 'REDIS_QUEUE_KEY', 'insight_reloaded')
-
+from insight_reloaded.insight_settings import *
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 try:
@@ -29,10 +20,12 @@ except IOError:
 c = tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT, selected_db=REDIS_DB)
 c.connect()
 
+
 class MainHandler(tornado.web.RequestHandler):
     """Convert the querystring in a REDIS job JSON."""
+
     @tornado.web.asynchronous
-    def get(self):
+    def get(self, queue):
         # If there is no argument, display the version
         if self.request.arguments == {}:
             self.write(dict(insight_reloaded="Bonjour", 
@@ -40,6 +33,15 @@ class MainHandler(tornado.web.RequestHandler):
                             version=VERSION))
             self.finish()
             return
+
+        if not queue:
+            queue = DEFAULT_REDIS_QUEUE_KEY
+
+        if queue not in REDIS_QUEUE_KEYS:
+            raise tornado.web.HTTPError(404, 'Queue "%s" not found' % queue)
+
+        self.queue = queue
+
 
         # Else process the request
         params = {'url': self.get_argument("url", None),
@@ -60,27 +62,33 @@ class MainHandler(tornado.web.RequestHandler):
         params['crop'] = self.get_argument('crop', False) and True
 
         message = json.dumps(params)
-        c.rpush(REDIS_QUEUE_KEY, message, self.on_response)
+        c.rpush(self.queue, message, self.on_response)
 
     def on_response(self, response):
-        self.write(dict(insight_reloaded="Job added to queue.",
+        self.write(dict(insight_reloaded="Job added to queue '%s'." % self.queue,
                         number_in_queue=response))
         self.finish()
 
 class StatusHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
-    def get(self):
-        c.llen(REDIS_QUEUE_KEY, self.on_response)
+    def get(self, queue):
+        if not queue:
+            queue = DEFAULT_REDIS_QUEUE_KEY
+
+        if queue not in REDIS_QUEUE_KEYS:
+            raise tornado.web.HTTPError(404, "Queue '%s' not found" % queue)
+        self.queue = queue
+        c.llen(self.queue, self.on_response)
 
     def on_response(self, response):
-        self.write(dict(insight_reloaded="There is %d job in the queue." % response,
+        self.write(dict(insight_reloaded="There is %d job in the '%s' queue." % (response, self.queue),
                         number_in_queue=response))
         self.finish()
 
 
 application = tornado.web.Application([
-    (r"/", MainHandler),
-    (r"/status", StatusHandler),
+    (r"/([A-Za-z0-9_-]*)/?status", StatusHandler),
+    (r"/([A-Za-z0-9_-]*)", MainHandler),
 ])
 
 def main():

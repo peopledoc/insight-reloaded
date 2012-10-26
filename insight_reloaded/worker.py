@@ -6,6 +6,7 @@ import os
 from tempfile import NamedTemporaryFile
 from urlparse import urljoin
 import mimetypes
+import sys
 
 from insight_reloaded.preview import (DocumentPreview, create_destination_folder, 
                                       PreviewException)
@@ -31,9 +32,25 @@ def abort(exception, requested_ressource, callback_url=None):
                                               exception.message))
 
 def main():
-    print "Launch insight worker"
+    # Init from CLI
+    worker_command = sys.argv[0]
+    argv = sys.argv[1:]
+    argc = len(argv)
+
+    if argc > 1:
+        print "USAGE: %s [REDIS_QUEUE_KEY]" % worker_command
+        sys.exit(1)
+    elif argc == 1:        
+        queue = argv[0]
+        if queue not in REDIS_QUEUE_KEYS:
+            print "WRONG QUEUE: %s not in %s" % (queue, REDIS_QUEUE_KEYS)
+            sys.exit(2)
+    else:
+        queue = DEFAULT_REDIS_QUEUE_KEY
+        
+    print "Launch insight worker on '%s' redis queue." % queue
     while 1:
-        msg = redis.blpop(REDIS_QUEUE_KEY) # BLPOP is blocking for the next entry
+        msg = redis.blpop(queue) # BLPOP is blocking for the next entry
         params = json.loads(msg[1])
         print u"Consuming task for doc %s" % params['url']
 
