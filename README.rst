@@ -26,7 +26,10 @@ We will get the document preview url with a callback.
 The API
 =======
 
-The API is that simple::
+Simple example
+++++++++++++++
+
+::
 
     curl -X GET "http://localhost:8888/?url=http://my_file_url.com/file.pdf&callback=http://requestb.in/12vsewg"
     {"insight_reloaded": "Job added to queue.", "number_in_queue": 14}
@@ -36,6 +39,28 @@ The API is that simple::
 
     curl -X GET http://localhost:8888/
     {"version": "0.2dev", "insight_reloaded": "Bonjour", "name": "insight-reloaded"}
+
+Multi-queues example
+++++++++++++++++++++
+
+You must to configure ``REDIS_QUEUE_KEYS`` in your ``settings.py``.
+
+::
+
+    REDIS_QUEUE_KEYS = ['urgent', 'normal']
+    DEFAULT_REDIS_QUEUE_KEY = 'normal'
+
+Then you can use::
+
+    curl -X GET "http://localhost:8888/urgent?url=http://my_file_url.com/file.pdf&callback=http://requestb.in/12vsewg"
+    {"insight_reloaded": "Job added to queue 'normal'.", "number_in_queue": 14}
+
+    curl -X GET http://localhost:8888/urgent/status
+    {"insight_reloaded": "There is 14 job in the 'urgent' queue.", "number_in_queue": 14}
+
+    curl -X GET http://localhost:8888/
+    {"version": "0.2dev", "insight_reloaded": "Bonjour", "name": "insight-reloaded"}
+
 
 
 Service architecture
