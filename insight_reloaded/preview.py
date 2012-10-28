@@ -67,11 +67,11 @@ class DocumentPreview(object):
                 move(path.join(folder, f),
                      path.join(self.destination_folder, new_name))
         if self.crop:
-            self.add_crop()
+            self.add_crop(self.crop)
 
-    def add_crop(self):
+    def add_crop(self, crop):
         """Add a cropped version of the first page 'normal' sized preview"""
-        logging.info(u"Cropping %s%%" % CROP_SIZE)
+        logging.info(u"Cropping %s%%" % crop)
         preview_folder = path.join(self.tmp_folder, 'previews')
         first_page = path.join(self.destination_folder, 'document_normal_p1.png')
         # copy the "to be cropped" file outside the previews folder: if the
@@ -79,7 +79,7 @@ class DocumentPreview(object):
         tmp_file = path.join(self.tmp_folder, 'before_cropping.png')
         cropped = path.join(self.destination_folder, 'document_normal_p1_cropped.png')
         copyfile(first_page, tmp_file)
-        cmd = "gm mogrify -crop 100%%x%s%% %s" % (CROP_SIZE, tmp_file)
+        cmd = "gm mogrify -crop 100%%x%s%% %s" % (crop, tmp_file)
         try:
             output = check_output(cmd, shell=True, stderr=STDOUT)
         except CalledProcessError, e:

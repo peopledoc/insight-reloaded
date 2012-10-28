@@ -59,7 +59,10 @@ class MainHandler(tornado.web.RequestHandler):
         except:
             params['max_previews'] = 20
 
-        params['crop'] = self.get_argument('crop', False) and True
+        try:
+            params['crop'] = int(self.get_argument('crop', 0))
+        except ValueError:
+            params['crop'] = CROP_SIZE
 
         message = json.dumps(params)
         c.rpush(self.queue, message, self.on_response)

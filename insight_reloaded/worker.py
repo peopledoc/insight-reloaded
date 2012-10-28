@@ -89,10 +89,10 @@ def main():
         
         # Settings parameters
         max_previews = params['max_previews']
-        if 'crop' in params and params['crop']:
-            crop = True
-        else:
-            crop = False
+        try:
+            crop = int(params['crop'])
+        except:
+            crop = CROP_SIZE
 
         # Here comes the document preview engine
         destination_folder = create_destination_folder(DESTINATION_ROOT)
