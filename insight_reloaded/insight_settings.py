@@ -21,7 +21,7 @@ ALLOWED_EXTENSIONS = getattr(settings, 'ALLOWED_EXTENSIONS',
                               '.png', '.gif'])
 
 PREVIEW_SIZES = getattr(settings, 'PREVIEW_SIZES', {'150': 'small', '750': 'normal', '1000': 'large'})
-CROP_SIZE = 12 # %
+CROP_SIZE = getattr(settings, "CROP_SIZE", 12) # %
 
 PREFIX_URL = getattr(settings, 'PREFIX_URL', 'http://localhost/viewer_cache')
 DOCVIEWER_SUFFIX = getattr(settings, 'DOCVIEWER_SUFFIX', 'document_{size}_p{page}.png')
