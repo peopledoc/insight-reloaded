@@ -9,6 +9,15 @@ import tornado.httpserver
 
 from insight_reloaded.insight_settings import *
 
+try:
+    from raven.handlers.logging import SentryHandler
+    from raven.conf import setup_logging
+except ImportError:
+    if DSN_SENTRY:
+        DSN_SENTRY = None
+        print "DSN_SENTRY is defined but raven isn't installed."
+
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 try:
     with open(os.path.join(HERE, '../VERSION')) as f:
@@ -19,7 +28,6 @@ except IOError:
 
 c = tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT, selected_db=REDIS_DB)
 c.connect()
-
 
 class MainHandler(tornado.web.RequestHandler):
     """Convert the querystring in a REDIS job JSON."""
@@ -95,6 +103,9 @@ application = tornado.web.Application([
 ])
 
 def main():
+    if DSN_SENTRY:
+        handler = SentryHandler(DSN_SENTRY)
+        setup_logging(handler)
     print "Launch tornado ioloop"
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()

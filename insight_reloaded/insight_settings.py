@@ -27,3 +27,5 @@ PREFIX_URL = getattr(settings, 'PREFIX_URL', 'http://localhost/viewer_cache')
 DOCVIEWER_SUFFIX = getattr(settings, 'DOCVIEWER_SUFFIX', 'document_{size}_p{page}.png')
 TEMP_DIRECTORY = getattr(settings, 'TEMP_DIRECTORY', '/tmp')
 DESTINATION_ROOT = getattr(settings, 'DESTINATION_ROOT', os.path.join(TEMP_DIRECTORY, 'previews'))
+
+DSN_SENTRY = getattr(settings, 'DSN_SENTRY', None)
