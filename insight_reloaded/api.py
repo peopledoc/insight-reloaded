@@ -10,12 +10,11 @@ import tornado.httpserver
 from insight_reloaded.insight_settings import *
 
 try:
-    from raven.handlers.logging import SentryHandler
-    from raven.conf import setup_logging
+    from raven import Client
 except ImportError:
-    if DSN_SENTRY:
-        DSN_SENTRY = None
-        print "DSN_SENTRY is defined but raven isn't installed."
+    if SENTRY_DSN:
+        SENTRY_DSN = None
+        print "SENTRY_DSN is defined but raven isn't installed."
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -103,12 +102,19 @@ application = tornado.web.Application([
 ])
 
 def main():
-    if DSN_SENTRY:
-        handler = SentryHandler(DSN_SENTRY)
-        setup_logging(handler)
+    if SENTRY_DSN:
+        client = Client(dsn=SENTRY_DSN)
+    else:
+        client = None
     print "Launch tornado ioloop"
     application.listen(8888)
-    tornado.ioloop.IOLoop.instance().start()
+    try:
+        tornado.ioloop.IOLoop.instance().start()
+    except Exception:
+        if client:
+            client.get_ident(client.captureException())
+        else:
+            raise
 
 if __name__ == "__main__":
     main()

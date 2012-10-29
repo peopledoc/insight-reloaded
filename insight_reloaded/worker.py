@@ -13,12 +13,11 @@ from insight_reloaded.preview import (DocumentPreview, create_destination_folder
 from insight_reloaded.insight_settings import *
 
 try:
-    from raven.handlers.logging import SentryHandler
-    from raven.conf import setup_logging
+    from raven import Client
 except ImportError:
-    if DSN_SENTRY:
-        DSN_SENTRY = None
-        print "DSN_SENTRY is defined but raven isn't installed."
+    if SENTRY_DSN:
+        SENTRY_DSN = None
+        print "SENTRY_DSN is defined but raven isn't installed."
 
 
 redis = StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
@@ -40,6 +39,18 @@ def abort(exception, requested_ressource, callback_url=None):
                                               exception.message))
 
 def main():
+    if SENTRY_DSN:
+        client = Client(dsn=SENTRY_DSN)
+        try:
+            start_worker()
+        except Exception:
+            client.get_ident(client.captureException())
+            raise
+    else:
+        start_worker()
+        
+
+def start_worker():
     # Init from CLI
     worker_command = sys.argv[0]
     argv = sys.argv[1:]
@@ -55,10 +66,6 @@ def main():
             sys.exit(2)
     else:
         queue = DEFAULT_REDIS_QUEUE_KEY
-
-    if DSN_SENTRY:
-        handler = SentryHandler(DSN_SENTRY)
-        setup_logging(handler)
         
     print "Launch insight worker on '%s' redis queue." % queue
     while 1:
