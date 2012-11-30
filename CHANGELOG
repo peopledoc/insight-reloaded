@@ -1,9 +1,21 @@
 Changelog
 =========
 
-0.2 (unreleased)
+0.2 (2012-11-30)
 ----------------
 
+* #1 - Add raven + Try catch the worker to catch all exception. Read SENTRY_DSN
+  from the settings and keep working without raven installed
+* #1 - Setup raven-python sentry client for insight_api and insight worker
+* Add CROP_SIZE to settings
+* #10 - Crop to the value of the crop parameter default to
+* Add documentation
+* Add multi queue management
+* Add code coloration in API documentation
+* #8 return the length of the queue; #2 Call Redis in ASYNC mode; #7 GET /
+  without params display the name and the version
+* Update README.rst
+* Link to insight-installer.
 
 0.1 (2012-10-22)
 ----------------
