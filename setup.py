@@ -15,22 +15,21 @@ version = read_relative_file('VERSION').strip()
 readme = read_relative_file('README')
 requirements = ['setuptools', 'tornado', 'tornado-redis',
                 'requests', 'redis', 'raven']
-entry_points = {
-    'console_scripts': [
-        'insight_api = insight_reloaded.api:main',
-        'insight = insight_reloaded.worker:main',
-        'fake_callback = insight_reloaded.fake_callback:main',
-        ]
-    }
+entry_points = {'console_scripts':
+                ['insight_api = insight_reloaded.api:main',
+                 'insight = insight_reloaded.worker:main',
+                 'fake_callback = insight_reloaded.fake_callback:main',
+                 ]
+                }
 
 
 if __name__ == '__main__':  # ``import setup`` doesn't trigger setup().
     setup(name=name,
           version=version,
-          description="""A full async docsplit previewer server based on Tornado and Redis""",
+          description="""
+          A full async docsplit previewer server based on Tornado and Redis""",
           long_description=readme,
-          classifiers=[
-                       "Programming Language :: Python",
+          classifiers=["Programming Language :: Python",
                        'License :: Other/Proprietary License',
                        ],
           keywords='',
@@ -43,4 +42,4 @@ if __name__ == '__main__':  # ``import setup`` doesn't trigger setup().
           zip_safe=False,
           install_requires=requirements,
           entry_points=entry_points,
-    )
+          )

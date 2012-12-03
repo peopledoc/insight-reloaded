@@ -1,6 +1,7 @@
 import tornado.ioloop
 import tornado.web
 
+
 class MainHandler(tornado.web.RequestHandler):
     def post(self):
         print self.request.arguments
@@ -9,6 +10,7 @@ class MainHandler(tornado.web.RequestHandler):
 application = tornado.web.Application([
     (r"/", MainHandler),
 ])
+
 
 def main():
     application.listen(55555)

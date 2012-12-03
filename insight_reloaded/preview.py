@@ -6,19 +6,19 @@ from os import path, chdir, listdir, makedirs
 from shutil import rmtree, copyfile, move
 from tempfile import mkdtemp
 import hashlib
-import random
-import uuid
-from insight_reloaded.insight_settings import CROP_SIZE
 try:
     from subprocess import STDOUT, check_output, CalledProcessError
 except ImportError:  # check_output new in 2.7, so use a backport for <=2.6
     from subprocess32 import STDOUT, check_output, CalledProcessError
 
+
 class PreviewException(Exception):
     pass
 
+
 class DocumentPreview(object):
-    def __init__(self, file_obj, callback, sizes, max_previews, 
+
+    def __init__(self, file_obj, callback, sizes, max_previews,
                  base_tmp_folder, destination_folder, crop=False):
         self.file_obj = file_obj
         self.callback = callback
@@ -42,19 +42,20 @@ class DocumentPreview(object):
         if self.pages < self.max_previews:
             self.max_previews = self.pages  # max_previews <= pages
         pages = '1-%s' % self.max_previews
-        logging.info(u"Creating previews in %s for pages '%s'" % (preview_folder, pages))
+        logging.info(
+            "Creating previews in %s for pages '%s'" % (preview_folder, pages))
         cmd = "%(cmd)s -o %(path)s -p %(pages)s -s %(sizes)s -f png %(file)s"
         try:
-            output = check_output(cmd % {'cmd': "docsplit images",
-                                         'path': preview_folder,
-                                         'pages': pages,
-                                         'sizes': ','.join(self.sizes.keys()),
-                                         'file': self.filename},
-                                  shell=True,
-                                  stderr=STDOUT)
+            check_output(cmd % {'cmd': "docsplit images",
+                                'path': preview_folder,
+                                'pages': pages,
+                                'sizes': ','.join(self.sizes.keys()),
+                                'file': self.filename},
+                         shell=True,
+                         stderr=STDOUT)
         except CalledProcessError, e:
             msg = u"[PREVIEW] Error while previewing %s: %s. Output: %r" % (
-                    self.filename, e, e.output)
+                self.filename, e, e.output)
             raise PreviewException(msg)
         # rename each preview using the format 'filename_{size}_p{page}.png'
         # and save all files in the "previews" folder, not in subfolders
@@ -72,19 +73,20 @@ class DocumentPreview(object):
     def add_crop(self, crop):
         """Add a cropped version of the first page 'normal' sized preview"""
         logging.info(u"Cropping %s%%" % crop)
-        preview_folder = path.join(self.tmp_folder, 'previews')
-        first_page = path.join(self.destination_folder, 'document_normal_p1.png')
+        first_page = path.join(self.destination_folder,
+                               'document_normal_p1.png')
         # copy the "to be cropped" file outside the previews folder: if the
         # crop fails, we don't want to add the full image as a cropped version
         tmp_file = path.join(self.tmp_folder, 'before_cropping.png')
-        cropped = path.join(self.destination_folder, 'document_normal_p1_cropped.png')
+        cropped = path.join(self.destination_folder,
+                            'document_normal_p1_cropped.png')
         copyfile(first_page, tmp_file)
         cmd = "gm mogrify -crop 100%%x%s%% %s" % (crop, tmp_file)
         try:
-            output = check_output(cmd, shell=True, stderr=STDOUT)
+            check_output(cmd, shell=True, stderr=STDOUT)
         except CalledProcessError, e:
             msg = u"[PREVIEW] Error while cropping %s: %s. Output: %r" % (
-                    tmp_file, e, e.output)
+                tmp_file, e, e.output)
             raise PreviewException(msg)
         move(tmp_file, cropped)  # put in preview folders
 
@@ -96,7 +98,7 @@ class DocumentPreview(object):
             output = check_output(cmd, shell=True, stderr=STDOUT)
         except CalledProcessError, e:
             msg = u"[PREVIEW] Failed get %s num pages: %s. Output: %r" % (
-                    self.filename, e, e.output)
+                self.filename, e, e.output)
             raise PreviewException(msg)
         num_pages = output.strip()
         if num_pages.isdigit():
@@ -111,22 +113,29 @@ class DocumentPreview(object):
             rmtree(self.tmp_folder, ignore_errors=True)
 
 
-def create_destination_folder(directory):
-    """Create a unique identifier for the document, create the path and return it."""
-    doc_uuid = str(uuid.uuid4()).replace('-', '')
+def create_destination_folder(directory, seed):
+    """Create a unique identifier for the document, create the path
+    and return it.
+
+    """
+    doc_uuid = hashlib.sha1(seed).hexdigest()
     document_path = path.join(directory, string_to_folder_path(doc_uuid))
-    makedirs(document_path)
+    try:
+        makedirs(document_path)
+    except OSError:
+        print "%s already exists." % document_path
     return document_path
-    
+
 
 def string_to_folder_path(s):
     """Split a string into 2-char length folders.
 
     >>> string_to_folder_path('3614816AA000002781')
-    '36/14/81/6A/A0/00/00/27/81'
+    '361/481/6AA/000/002/781'
 
     """
     if s:
-        folders = [s[i:i + 2] for i in range(0, len(s), 2)]
+        size = len(s) / 3 * 3
+        folders = [s[i:i + 3] for i in range(0, size, 3)]
         return path.join(*folders)
     return ""

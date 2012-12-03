@@ -7,7 +7,10 @@ import tornado.ioloop
 import tornado.gen
 import tornado.httpserver
 
-from insight_reloaded.insight_settings import *
+from insight_reloaded.insight_settings import (
+    REDIS_HOST, REDIS_PORT, REDIS_DB, SENTRY_DSN, REDIS_QUEUE_KEYS,
+    DEFAULT_REDIS_QUEUE_KEY, CROP_SIZE)
+
 
 try:
     from raven import Client
@@ -20,13 +23,14 @@ except ImportError:
 HERE = os.path.dirname(os.path.abspath(__file__))
 try:
     with open(os.path.join(HERE, '../VERSION')) as f:
-        VERSION=f.readlines()[0].strip()
+        VERSION = f.readlines()[0].strip()
 except IOError:
-    VERSION='N/A'
+    VERSION = 'N/A'
 
 
 c = tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT, selected_db=REDIS_DB)
 c.connect()
+
 
 class MainHandler(tornado.web.RequestHandler):
     """Convert the querystring in a REDIS job JSON."""
@@ -35,8 +39,8 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self, queue):
         # If there is no argument, display the version
         if self.request.arguments == {}:
-            self.write(dict(insight_reloaded="Bonjour", 
-                            name="insight-reloaded", 
+            self.write(dict(insight_reloaded="Bonjour",
+                            name="insight-reloaded",
                             version=VERSION))
             self.finish()
             return
@@ -49,17 +53,19 @@ class MainHandler(tornado.web.RequestHandler):
 
         self.queue = queue
 
-
         # Else process the request
         params = {'url': self.get_argument("url", None),
-                  'callback': self.get_argument("callback", None),}
+                  'callback': self.get_argument("callback", None),
+                  }
         # Get URL
         if params['url']:
             if params['url'].startswith('/'):
-                params['url'] = '%s://%s%s' % (self.request.protocol, self.request.host, url)
+                params['url'] = '%s://%s%s' % (self.request.protocol,
+                                               self.request.host,
+                                               params['url'])
         else:
             raise tornado.web.HTTPError(404, 'Input file not found')
-        
+
         # Max number of pages to compile
         try:
             params['max_previews'] = int(self.get_argument('pages', 20))
@@ -75,9 +81,11 @@ class MainHandler(tornado.web.RequestHandler):
         c.rpush(self.queue, message, self.on_response)
 
     def on_response(self, response):
-        self.write(dict(insight_reloaded="Job added to queue '%s'." % self.queue,
+        self.write(dict(insight_reloaded="Job added to queue '%s'." %
+                        self.queue,
                         number_in_queue=response))
         self.finish()
+
 
 class StatusHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
@@ -91,7 +99,8 @@ class StatusHandler(tornado.web.RequestHandler):
         c.llen(self.queue, self.on_response)
 
     def on_response(self, response):
-        self.write(dict(insight_reloaded="There is %d job in the '%s' queue." % (response, self.queue),
+        self.write(dict(insight_reloaded="There is %d job in the '%s' queue." %
+                        (response, self.queue),
                         number_in_queue=response))
         self.finish()
 
@@ -100,6 +109,7 @@ application = tornado.web.Application([
     (r"/([A-Za-z0-9_-]*)/?status", StatusHandler),
     (r"/([A-Za-z0-9_-]*)", MainHandler),
 ])
+
 
 def main():
     if SENTRY_DSN:
