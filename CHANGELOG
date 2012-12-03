@@ -1,8 +1,13 @@
 Changelog
 =========
 
-0.3 (unreleased)
+
+0.3 (2012-12-03)
 ----------------
+
+* Unique path for same input
+* PEP8 compliant
+
 
 0.2 (2012-11-30)
 ----------------
