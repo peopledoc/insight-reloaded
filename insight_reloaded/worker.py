@@ -135,8 +135,7 @@ def start_worker():
             abort(e, params['url'], callback)
         finally:
             preview.cleanup()
-
-        file_obj.close()
+            file_obj.close()
 
         url = destination_folder.replace(DESTINATION_ROOT, PREFIX_URL)
         docviewer_url = os.path.join(url, DOCVIEWER_SUFFIX)
