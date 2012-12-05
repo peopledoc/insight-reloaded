@@ -1,8 +1,12 @@
 Changelog
 =========
 
-0.4 (unreleased)
+
+0.4 (2012-12-05)
 ----------------
+
+* Close the NamedTemporaryFile event if the preview fail
+* Add a functional test for insight.
 
 
 0.3 (2012-12-03)
@@ -27,6 +31,7 @@ Changelog
   without params display the name and the version
 * Update README.rst
 * Link to insight-installer.
+
 
 0.1 (2012-10-22)
 ----------------
