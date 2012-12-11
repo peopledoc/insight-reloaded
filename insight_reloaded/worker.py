@@ -36,12 +36,12 @@ def abort(exception, requested_ressource, callback_url=None):
         try:
             requests.post(callback_url,
                           data={'success': False,
-                                'error_message': exception.message,
+                                'error_message': str(exception),
                                 'requested_ressource': requested_ressource})
         except requests.exceptions.ConnectionError:
             pass
     raise InsightWorkerException('%s : %s' % (requested_ressource,
-                                              exception.message))
+                                              exception))
 
 
 def main():
@@ -132,8 +132,10 @@ def start_worker():
         try:
             preview.create_previews()
         except PreviewException, e:
+            preview.cleanup()
+            file_obj.close()
             abort(e, params['url'], callback)
-        finally:
+        else:
             preview.cleanup()
             file_obj.close()
 
