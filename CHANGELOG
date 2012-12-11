@@ -1,8 +1,11 @@
 Changelog
 =========
 
-0.5 (unreleased)
+0.5 (2012-12-11)
 ----------------
+
+* Close before the abort
+* Remove the deprecation on exception.message
 
 
 0.4 (2012-12-05)
