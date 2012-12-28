@@ -35,6 +35,7 @@ def abort(exception, requested_ressource, callback_url=None):
     if callback_url:
         try:
             requests.post(callback_url,
+                          verify=False,
                           data={'success': False,
                                 'error_message': str(exception),
                                 'requested_ressource': requested_ressource})
@@ -149,6 +150,7 @@ def start_worker():
 
         if callback:
             requests.post(params['callback'],
+                          verify=False,
                           data={'success': True, 'num_pages': preview.pages,
                                 'docviewer_url': docviewer_url})
 
