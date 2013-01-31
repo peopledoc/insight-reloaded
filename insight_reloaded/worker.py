@@ -48,13 +48,17 @@ def abort(exception, requested_ressource, callback_url=None):
 def main():
     if SENTRY_DSN:
         client = Client(dsn=SENTRY_DSN)
-        try:
-            start_worker()
-        except Exception:
-            client.get_ident(client.captureException())
-            raise
+        while True:
+            try:
+                start_worker()
+            except Exception:
+                client.get_ident(client.captureException())
     else:
-        start_worker()
+        while True:
+            try:
+                start_worker()
+            except InsightWorkerException:
+                pass
 
 
 def start_worker():
