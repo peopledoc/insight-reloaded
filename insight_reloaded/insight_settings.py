@@ -5,6 +5,10 @@ try:
 except ImportError:
     settings = None
 
+import mimetypes
+
+mimetypes.add_type('application/x-tika-ooxml', '.docx')
+
 REDIS_HOST = getattr(settings, 'REDIS_HOST', 'localhost')
 REDIS_PORT = getattr(settings, 'REDIS_PORT', 6379)
 REDIS_DB = getattr(settings, 'REDIS_DB', 0)
