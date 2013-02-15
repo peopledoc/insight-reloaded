@@ -57,8 +57,8 @@ def main():
         while True:
             try:
                 start_worker()
-            except InsightWorkerException:
-                pass
+            except InsightWorkerException as e:
+                sys.stderr.write('%s\n' % e)
 
 
 def start_worker():
