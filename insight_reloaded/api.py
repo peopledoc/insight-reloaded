@@ -78,7 +78,7 @@ class MainHandler(tornado.web.RequestHandler):
             params['crop'] = CROP_SIZE
 
         message = json.dumps(params)
-        c.rpush(self.queue, message, self.on_response)
+        c.rpush(self.queue, message, callback=self.on_response)
 
     def on_response(self, response):
         self.write(dict(insight_reloaded="Job added to queue '%s'." %
