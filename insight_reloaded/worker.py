@@ -81,7 +81,11 @@ def start_worker():
     print "Launch insight worker on '%s' redis queue." % queue
     while 1:
         msg = redis.blpop(queue)  # BLPOP is blocking for the next entry
-        params = json.loads(msg[1])
+        try:
+            params = json.loads(msg[1])
+        except ValueError as exc:
+            abort(exc, msg)
+
         print u"Consuming task for doc %s" % params['url']
 
         # Getting callback url
