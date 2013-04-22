@@ -23,7 +23,7 @@ if DEFAULT_REDIS_QUEUE_KEY not in REDIS_QUEUE_KEYS:
 ALLOWED_EXTENSIONS = getattr(settings, 'ALLOWED_EXTENSIONS',
                              ['.pdf', '.jpeg', '.jpg', '.doc', '.docx', '.xls',
                               '.xlsx', '.odt', '.ods', '.ppt', '.pptx', '.odp',
-                              '.png', '.gif'])
+                              '.png', '.gif', '.txt'])
 
 PREVIEW_SIZES = getattr(settings, 'PREVIEW_SIZES',
                         {'150': 'small', '750': 'normal', '1000': 'large'})
