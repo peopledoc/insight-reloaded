@@ -96,7 +96,7 @@ class StatusHandler(tornado.web.RequestHandler):
         if queue not in REDIS_QUEUE_KEYS:
             raise tornado.web.HTTPError(404, "Queue '%s' not found" % queue)
         self.queue = queue
-        c.llen(self.queue, self.on_response)
+        c.llen(self.queue, callback=self.on_response)
 
     def on_response(self, response):
         self.write(dict(insight_reloaded="There is %d job in the '%s' queue." %
