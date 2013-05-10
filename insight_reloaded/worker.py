@@ -8,12 +8,12 @@ import mimetypes
 import sys
 
 from insight_reloaded.preview import (DocumentPreview,
-                                      create_destination_folder,
                                       PreviewException)
 from insight_reloaded.insight_settings import (
     REDIS_HOST, REDIS_PORT, REDIS_DB, SENTRY_DSN, REDIS_QUEUE_KEYS,
     DEFAULT_REDIS_QUEUE_KEY, ALLOWED_EXTENSIONS, TEMP_DIRECTORY, CROP_SIZE,
     DESTINATION_ROOT, PREVIEW_SIZES, PREFIX_URL, DOCVIEWER_SUFFIX)
+from insight_reloaded.storage.nfs import NFSStorage
 
 try:
     from raven import Client
@@ -135,11 +135,11 @@ def start_worker():
             crop = CROP_SIZE
 
         # Here comes the document preview engine
-        destination_folder = create_destination_folder(DESTINATION_ROOT,
-                                                       params['url'])
+        storage = NFSStorage(DESTINATION_ROOT, params['url'], PREFIX_URL)
+        storage.prepare()
         preview = DocumentPreview(file_obj, callback, PREVIEW_SIZES,
                                   max_previews, TEMP_DIRECTORY,
-                                  destination_folder, crop)
+                                  storage, crop)
         try:
             preview.create_previews()
         except PreviewException, e:
@@ -150,7 +150,7 @@ def start_worker():
             preview.cleanup()
             file_obj.close()
 
-        url = destination_folder.replace(DESTINATION_ROOT, PREFIX_URL)
+        url = storage.get_url()
         docviewer_url = os.path.join(url, DOCVIEWER_SUFFIX)
 
         print u"Document previewed in %s" % docviewer_url\

@@ -19,7 +19,7 @@ class PreviewException(Exception):
 class DocumentPreview(object):
 
     def __init__(self, file_obj, callback, sizes, max_previews,
-                 base_tmp_folder, destination_folder, crop=False):
+                 base_tmp_folder, storage, crop=False):
         self.file_obj = file_obj
         self.callback = callback
         self.filename = file_obj.name
@@ -28,7 +28,7 @@ class DocumentPreview(object):
         self.max_previews = max_previews
         self.base_tmp_folder = base_tmp_folder
         self.tmp_folder = mkdtemp(dir=self.base_tmp_folder)
-        self.destination_folder = destination_folder
+        self.storage = storage
         self.crop = crop
 
     def __unicode__(self):
@@ -36,6 +36,9 @@ class DocumentPreview(object):
 
     def create_previews(self):
         """Calls docsplit with the proper parameters."""
+
+        self.storage.prepare()
+
         chdir(self.tmp_folder)
         preview_folder = path.join(self.tmp_folder, 'previews')
         self.pages = self.get_num_pages()
@@ -62,24 +65,17 @@ class DocumentPreview(object):
         for size_name, size in self.sizes.iteritems():
             folder = path.join(preview_folder, size_name)  # previews/150
             for f in listdir(folder):  # filenames: filename_<page num>.png
-                filename_end = f.split('_')[-1]  # <page_num>.png
-                page_num = filename_end[:-4]  # remove the '.png' extension
-                new_name = 'document_%s_p%s.png' % (size, page_num)
-                move(path.join(folder, f),
-                     path.join(self.destination_folder, new_name))
+                self.storage.post_process(path.join(folder, f), size)
         if self.crop:
             self.add_crop(self.crop)
 
     def add_crop(self, crop):
         """Add a cropped version of the first page 'normal' sized preview"""
         logging.info(u"Cropping %s%%" % crop)
-        first_page = path.join(self.destination_folder,
-                               'document_normal_p1.png')
+        first_page = self.storage.get_path('document_normal_p1.png')
         # copy the "to be cropped" file outside the previews folder: if the
         # crop fails, we don't want to add the full image as a cropped version
         tmp_file = path.join(self.tmp_folder, 'before_cropping.png')
-        cropped = path.join(self.destination_folder,
-                            'document_normal_p1_cropped.png')
         copyfile(first_page, tmp_file)
         cmd = "gm mogrify -crop 100%%x%s%% %s" % (crop, tmp_file)
         try:
@@ -88,7 +84,8 @@ class DocumentPreview(object):
             msg = u"[PREVIEW] Error while cropping %s: %s. Output: %r" % (
                 tmp_file, e, e.output)
             raise PreviewException(msg)
-        move(tmp_file, cropped)  # put in preview folders
+
+        self.storage.save(tmp_file, 'document_normal_p1_cropped.ong')
 
     def get_num_pages(self):
         """Return the number of pages for the document"""
@@ -111,31 +108,3 @@ class DocumentPreview(object):
         if self.tmp_folder is not None and path.exists(self.tmp_folder):
             logging.info(u"Removing %s" % self.tmp_folder)
             rmtree(self.tmp_folder, ignore_errors=True)
-
-
-def create_destination_folder(directory, seed):
-    """Create a unique identifier for the document, create the path
-    and return it.
-
-    """
-    doc_uuid = hashlib.sha1(seed).hexdigest()
-    document_path = path.join(directory, string_to_folder_path(doc_uuid))
-    try:
-        makedirs(document_path)
-    except OSError:
-        print "%s already exists." % document_path
-    return document_path
-
-
-def string_to_folder_path(s):
-    """Split a string into 2-char length folders.
-
-    >>> string_to_folder_path('3614816AA000002781')
-    '361/481/6AA/000/002/781'
-
-    """
-    if s:
-        size = len(s) / 3 * 3
-        folders = [s[i:i + 3] for i in range(0, size, 3)]
-        return path.join(*folders)
-    return ""
