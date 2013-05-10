@@ -36,7 +36,7 @@ class DocumentPreview(object):
     def create_previews(self):
         """Calls docsplit with the proper parameters."""
 
-        self.storage.prepare(self.tmp_folder)
+        self.storage.prepare()
 
         chdir(self.tmp_folder)
         preview_folder = path.join(self.tmp_folder, 'previews')
@@ -64,7 +64,10 @@ class DocumentPreview(object):
         for size_name, size in self.sizes.iteritems():
             folder = path.join(preview_folder, size_name)  # previews/150
             for f in listdir(folder):  # filenames: filename_<page num>.png
-                self.storage.post_process(path.join(folder, f), size)
+                filename_end = f.split('_')[-1]  # <page_num>.png
+                page_num = filename_end[:-4]  # remove the '.png' extension
+                new_name = 'document_%s_p%s.png' % (size, page_num)
+                self.storage.save(path.join(folder, f), new_name)
         if self.crop:
             self.add_crop(self.crop)
 

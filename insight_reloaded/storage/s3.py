@@ -13,6 +13,7 @@ class S3Storage(object):
         self.document_url = document_url
         self.document_hash = hashlib.sha1(self.document_url).hexdigest()
         self.conn = S3Connection(s3_access_key, s3_secret_key)
+        self.paths = {}
 
         if s3_location is None:
             s3_location = Location.EU
@@ -25,21 +26,16 @@ class S3Storage(object):
 
             self.bucket = self.conn.create_bucket(self.bucket, location=s3_location)
 
-    def prepare(self, tmp_folder):
+    def prepare(self):
         """Do nothing
         """
-        self.tmp_folder = tmp_folder
+        pass
 
-    def post_process(self, path, size):
-        filename_end = path.split('_')[-1]  # <page_num>.png
-        page_num = filename_end[:-4]  # remove the '.png' extension
-        new_name = 'document_%s_p%s.png' % (size, page_num)
-        self.save(path, new_name)
-
-    def get_path(self, path):
-        return join(self.tmp_folder, path)
+    def get_path(self, filename):
+        return self.paths[filename]
 
     def save(self, path, filename):
+        self.paths[filename] = path
         key = Key(self.bucket)
         key.storage_class = 'REDUCED_REDUNDANCY'
         key.key = join(self.document_hash, filename)

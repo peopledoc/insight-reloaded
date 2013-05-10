@@ -11,7 +11,7 @@ class NFSStorage(object):
         self.document_url = document_url
         self.prefix_url = prefix_url
 
-    def prepare(self, tmp_folder):
+    def prepare(self):
         """Create a unique identifier for the document, create the path
         and return it.
         """
@@ -22,12 +22,6 @@ class NFSStorage(object):
         except OSError:
             print "%s already exists." % document_path
         self.destination_folder = document_path
-
-    def post_process(self, path, size):
-        filename_end = path.split('_')[-1]  # <page_num>.png
-        page_num = filename_end[:-4]  # remove the '.png' extension
-        new_name = 'document_%s_p%s.png' % (size, page_num)
-        self.save(path, new_name)
 
     def get_path(self, path):
         return join(self.destination_folder, path)
