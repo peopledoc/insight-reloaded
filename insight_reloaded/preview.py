@@ -2,10 +2,9 @@
 """Preview documents"""
 
 import logging
-from os import path, chdir, listdir, makedirs
-from shutil import rmtree, copyfile, move
+from os import path, chdir, listdir
+from shutil import rmtree, copyfile
 from tempfile import mkdtemp
-import hashlib
 try:
     from subprocess import STDOUT, check_output, CalledProcessError
 except ImportError:  # check_output new in 2.7, so use a backport for <=2.6
@@ -37,7 +36,7 @@ class DocumentPreview(object):
     def create_previews(self):
         """Calls docsplit with the proper parameters."""
 
-        self.storage.prepare()
+        self.storage.prepare(self.tmp_folder)
 
         chdir(self.tmp_folder)
         preview_folder = path.join(self.tmp_folder, 'previews')
