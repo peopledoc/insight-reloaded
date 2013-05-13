@@ -4,22 +4,23 @@ import hashlib
 from boto.s3.connection import S3Connection, Location
 from boto.s3.key import Key
 from boto.exception import S3ResponseError
+from insight_reloaded.insight_settings import (S3_ACCESS_KEY, S3_SECRET_KEY,
+    S3_BUCKET_NAME)
 
 
 class S3Storage(object):
 
-    def __init__(self, s3_access_key, s3_secret_key, s3_bucket_name, document_url,
-            s3_location=None):
+    def __init__(self, document_url, s3_location=None):
         self.document_url = document_url
         self.document_hash = hashlib.sha1(self.document_url).hexdigest()
-        self.conn = S3Connection(s3_access_key, s3_secret_key)
+        self.conn = S3Connection(S3_ACCESS_KEY, S3_SECRET_KEY)
         self.paths = {}
 
         if s3_location is None:
             s3_location = Location.EU
 
         try:
-            self.bucket = self.conn.get_bucket(s3_bucket_name)
+            self.bucket = self.conn.get_bucket(S3_BUCKET_NAME)
         except S3ResponseError, e:
             if e.status != 404:
                 raise

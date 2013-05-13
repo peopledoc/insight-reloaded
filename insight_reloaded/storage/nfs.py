@@ -2,14 +2,15 @@ from os import makedirs
 from os.path import join
 from shutil import rmtree, move
 import hashlib
+from insight_reloaded.insight_settings import (DESTINATION_ROOT, PREFIX_URL)
 
 
 class NFSStorage(object):
 
-    def __init__(self, destination_root, document_url, prefix_url):
-        self.destination_root = destination_root
+    def __init__(self, document_url):
+        self.destination_root = DESTINATION_ROOT
         self.document_url = document_url
-        self.prefix_url = prefix_url
+        self.prefix_url = PREFIX_URL
 
     def prepare(self):
         """Create a unique identifier for the document, create the path

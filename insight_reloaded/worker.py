@@ -14,8 +14,7 @@ from insight_reloaded.insight_settings import (
     DEFAULT_REDIS_QUEUE_KEY, ALLOWED_EXTENSIONS, TEMP_DIRECTORY, CROP_SIZE,
     DESTINATION_ROOT, PREVIEW_SIZES, PREFIX_URL, DOCVIEWER_SUFFIX,
     STORAGE_CLASS, S3_ACCESS_KEY, S3_SECRET_KEY, S3_BUCKET_NAME)
-from insight_reloaded.storage.nfs import NFSStorage
-from insight_reloaded.storage.s3 import S3Storage
+from utils import ImportStringError, resolve_name
 
 try:
     from raven import Client
@@ -137,14 +136,8 @@ def start_worker():
             crop = CROP_SIZE
 
         # Create the storage
-        if STORAGE_CLASS == 'NFS':
-            storage = NFSStorage(DESTINATION_ROOT, params['url'], PREFIX_URL)
-        elif STORAGE_CLASS == 'S3':
-            storage = S3Storage(S3_ACCESS_KEY, S3_SECRET_KEY, S3_BUCKET_NAME, params['url'])
-        else:
-            abort(InsightWorkerException('Unknown storage class %s' %
-                                         STORAGE_CLASS),
-                  params['url'], callback)
+        storage_class = resolve_name(STORAGE_CLASS)
+        storage = storage_class(params['url'])
 
         # Here comes the document preview engine
         preview = DocumentPreview(file_obj, callback, PREVIEW_SIZES,
