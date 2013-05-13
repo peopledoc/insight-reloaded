@@ -14,7 +14,7 @@ name = 'insight_reloaded'
 version = read_relative_file('VERSION').strip()
 readme = read_relative_file('README')
 requirements = ['setuptools', 'tornado', 'tornado-redis',
-                'requests', 'redis', 'raven']
+                'requests', 'redis', 'raven', 'boto']
 entry_points = {'console_scripts':
                 ['insight_api = insight_reloaded.api:main',
                  'insight = insight_reloaded.worker:main',
