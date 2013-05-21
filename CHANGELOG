@@ -1,8 +1,15 @@
 Changelog
 =========
 
-0.8 (unreleased)
+0.9 (unreleased)
 ----------------
+
+
+0.8 (2013-05-13)
+----------------
+
+* Update for callbacks on new tornadoredis version
+* Give more informations on json.loads error
 
 
 0.7 (2013-02-15)

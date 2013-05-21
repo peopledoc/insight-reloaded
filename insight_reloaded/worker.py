@@ -111,7 +111,7 @@ def start_worker():
         if 'content-disposition' in r.headers:
             filename = r.headers['content-disposition'].split('filename=')[-1]
             filename = filename.strip('"').strip("'")
-            extensions.append(os.path.splitext(filename)[1:])
+            extensions.extend(os.path.splitext(filename)[1:])
 
         # Verify if the file is accepted
         accepted_extensions = list(
