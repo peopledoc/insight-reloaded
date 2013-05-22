@@ -27,9 +27,9 @@ try:
 except IOError:
     VERSION = 'N/A'
 
-
-c = tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT, selected_db=REDIS_DB)
-c.connect()
+from kombu import Connection, Exchange, Queue
+previews_exchange = Exchange('previews', 'direct', durable=True)
+previews_queue = Queue('previews', exchange=previews_exchange, routing_key='previews')
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -78,13 +78,21 @@ class MainHandler(tornado.web.RequestHandler):
             params['crop'] = CROP_SIZE
 
         message = json.dumps(params)
-        c.rpush(self.queue, message, callback=self.on_response)
+        with Connection('redis://localhost:6379/') as conn:
+            with conn.Producer(serializer='json') as producer:
+                producer.publish(message, exchange=previews_exchange,
+                    routing_key='previews', declare=[previews_queue])
 
-    def on_response(self, response):
         self.write(dict(insight_reloaded="Job added to queue '%s'." %
-                        self.queue,
-                        number_in_queue=response))
+                        self.queue))
         self.finish()
+        # c.rpush(self.queue, message, callback=self.on_response)
+
+    # def on_response(self, response):
+    #     self.write(dict(insight_reloaded="Job added to queue '%s'." %
+    #                     self.queue,
+    #                     number_in_queue=response))
+    #     self.finish()
 
 
 class StatusHandler(tornado.web.RequestHandler):
