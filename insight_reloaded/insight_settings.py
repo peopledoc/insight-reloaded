@@ -38,7 +38,8 @@ DESTINATION_ROOT = getattr(settings, 'DESTINATION_ROOT',
 
 SENTRY_DSN = getattr(settings, 'SENTRY_DSN', None)
 
-STORAGE_CLASS = getattr(settings, 'STORAGE_CLASS', 'NFS') # NFS or S3
+STORAGE_CLASS = getattr(settings, 'STORAGE_CLASS',
+    'insight_reloaded.storage.file_system:FileSystemStorage') # FS or S3
 
 S3_ACCESS_KEY = getattr(settings, 'S3_ACCESS_KEY', None)
 S3_SECRET_KEY = getattr(settings, 'S3_SECRET_KEY', None)

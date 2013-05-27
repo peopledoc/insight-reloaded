@@ -5,7 +5,7 @@ import hashlib
 from insight_reloaded.insight_settings import (DESTINATION_ROOT, PREFIX_URL)
 
 
-class NFSStorage(object):
+class FileSystemStorage(object):
 
     def __init__(self, document_url):
         self.destination_root = DESTINATION_ROOT
