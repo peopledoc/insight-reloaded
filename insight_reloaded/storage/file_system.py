@@ -7,10 +7,16 @@ from insight_reloaded.insight_settings import (DESTINATION_ROOT, PREFIX_URL)
 
 class FileSystemStorage(object):
 
-    def __init__(self, document_url):
-        self.destination_root = DESTINATION_ROOT
+    def __init__(self, document_url, destination_root=None, prefix_url=None):
+        if not destination_root:
+            destination_root = DESTINATION_ROOT
+        self.destination_root = destination_root
+
+        if not prefix_url:
+            prefix_url = PREFIX_URL
+        self.prefix_url = prefix_url
+
         self.document_url = document_url
-        self.prefix_url = PREFIX_URL
 
     def prepare(self):
         """Create a unique identifier for the document, create the path
