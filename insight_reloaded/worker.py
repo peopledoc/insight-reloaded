@@ -25,7 +25,6 @@ except ImportError:
 
 from kombu import Connection, Exchange, Queue
 previews_exchange = Exchange('previews', 'direct', durable=True)
-previews_queue = Queue('previews', exchange=previews_exchange, routing_key='previews')
 
 
 class InsightWorkerException(Exception):
@@ -65,7 +64,7 @@ def main():
 
 def do_work(body, message):
     try:
-        params = json.loads(body)
+        params = body
     except ValueError as exc:
         abort(exc, msg)
 
@@ -138,14 +137,15 @@ def do_work(body, message):
     base_document_url = storage.get_base_document_url()
     docviewer_url = os.path.join(base_document_url, DOCVIEWER_SUFFIX)
 
-    print u"Document previewed in %s" % docviewer_url\
-        .replace('{size}', 'normal').replace('{page}', '1')
-
     if callback:
         requests.post(params['callback'],
                       verify=False,
                       data={'success': True, 'num_pages': preview.pages,
                             'docviewer_url': docviewer_url})
+
+    print u"Document previewed in %s" % docviewer_url\
+        .replace('{size}', 'normal').replace('{page}', '1')
+
     message.ack()
 
 
@@ -167,8 +167,12 @@ def start_worker():
         queue = DEFAULT_REDIS_QUEUE_KEY
 
     print "Launch insight worker on '%s' redis queue." % queue
+
+    redis_address = 'redis://%s:%s/%s' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
+    previews_queue = Queue(queue, exchange=previews_exchange, routing_key=queue)
+
     while 1:
-        with Connection('redis://%s:6379/' % REDIS_HOST) as conn:
+        with Connection(redis_address) as conn:
             with conn.Consumer(previews_queue, callbacks=[do_work]) as consumer:
                 while True:
                     conn.drain_events()

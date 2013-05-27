@@ -27,9 +27,13 @@ try:
 except IOError:
     VERSION = 'N/A'
 
+# Kombu connection
 from kombu import Connection, Exchange, Queue
 previews_exchange = Exchange('previews', 'direct', durable=True)
-previews_queue = Queue('previews', exchange=previews_exchange, routing_key='previews')
+
+# Raw redis connection
+c = tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT, selected_db=REDIS_DB)
+c.connect()
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -37,6 +41,7 @@ class MainHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def get(self, queue):
+        print "GET!!!!!!!!!!!!!"
         # If there is no argument, display the version
         if self.request.arguments == {}:
             self.write(dict(insight_reloaded="Bonjour",
@@ -77,11 +82,19 @@ class MainHandler(tornado.web.RequestHandler):
         except ValueError:
             params['crop'] = CROP_SIZE
 
-        message = json.dumps(params)
-        with Connection('redis://localhost:6379/') as conn:
+        message = params
+
+        redis_address = 'redis://%s:%s/%s' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
+
+        previews_queue = Queue(self.queue, exchange=previews_exchange,
+            routing_key=self.queue)
+
+        print "PUSH!!!!!!!!!!!!! to queue %s" % self.queue
+
+        with Connection(redis_address) as conn:
             with conn.Producer(serializer='json') as producer:
                 producer.publish(message, exchange=previews_exchange,
-                    routing_key='previews', declare=[previews_queue])
+                    routing_key=self.queue, declare=[previews_queue])
 
         self.write(dict(insight_reloaded="Job added to queue '%s'." %
                         self.queue))
