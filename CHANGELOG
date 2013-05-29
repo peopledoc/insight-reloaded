@@ -1,8 +1,18 @@
 Changelog
 =========
 
-0.9 (unreleased)
+0.9 (2013-05-29)
 ----------------
+
+* Add test for file system storage
+* Rename NFSStorage to FileSystemStorage
+* Fix bug in content-type header processing, do not append a tuple
+* Add dynamic import using some circus code
+* Add boto to requirements
+* Remove post_process method of Storage. Make crop works with S3 Storage
+* Add working S3 storage
+* Beginning of storage refactoring
+
 
 
 0.8 (2013-05-13)
