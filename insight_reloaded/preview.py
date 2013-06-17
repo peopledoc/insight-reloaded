@@ -87,7 +87,7 @@ class DocumentPreview(object):
                 tmp_file, e, e.output)
             raise PreviewException(msg)
 
-        self.storage.save(tmp_file, 'document_normal_p1_cropped.ong')
+        self.storage.save(tmp_file, 'document_normal_p1_cropped.png')
 
     def get_num_pages(self):
         """Return the number of pages for the document"""
