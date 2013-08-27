@@ -27,6 +27,7 @@ try:
 except IOError:
     VERSION = 'N/A'
 
+MAX_PAGES_PREVIEW = 500
 
 c = tornadoredis.Client(host=REDIS_HOST, port=REDIS_PORT, selected_db=REDIS_DB)
 c.connect()
@@ -68,9 +69,9 @@ class MainHandler(tornado.web.RequestHandler):
 
         # Max number of pages to compile
         try:
-            params['max_previews'] = int(self.get_argument('pages', 20))
+            params['max_previews'] = int(self.get_argument('pages', MAX_PAGES_PREVIEW))
         except:
-            params['max_previews'] = 20
+            params['max_previews'] = MAX_PAGES_PREVIEW
 
         try:
             params['crop'] = int(self.get_argument('crop', 0))
