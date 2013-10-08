@@ -106,7 +106,7 @@ class StatusHandler(tornado.web.RequestHandler):
 
 
 application = tornado.web.Application([
-    (r"/([A-Za-z0-9_-]*)/?status", StatusHandler),
+    (r"/([A-Za-z0-9_-]*)/status", StatusHandler),
     (r"/([A-Za-z0-9_-]*)", MainHandler),
 ])
 
