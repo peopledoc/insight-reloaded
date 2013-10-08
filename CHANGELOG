@@ -1,8 +1,22 @@
 Changelog
 =========
 
-1.2 (unreleased)
+1.4 (unreleased)
 ----------------
+
+* No changes yet.
+
+
+1.3 (2013-09-30)
+----------------
+
+* Change Max pages preview to 500
+
+
+1.2 (2013-07-26)
+----------------
+
+* Add the rackspace storage class
 
 
 1.1 (2013-06-17)
