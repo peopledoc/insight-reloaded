@@ -28,7 +28,7 @@ def main():
         avg = deltaQ * -3600 / deltaT
 
         print(
-            '\r%s — current: %d — avg: %.2f per hour' % (QUEUE, stats, avg),
+            '\r%s — current: %d — avg: %+.2f per hour' % (QUEUE, stats, avg),
             end=''
         )
         sys.stdout.flush()
