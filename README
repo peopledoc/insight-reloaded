@@ -38,7 +38,7 @@ Simple example
     {"insight_reloaded": "There is 14 job in the queue.", "number_in_queue": 14}
 
     curl -X GET http://localhost:8888/
-    {"version": "0.2dev", "insight_reloaded": "Bonjour", "name": "insight-reloaded"}
+    {"version": "1.5", "insight_reloaded": "Bonjour", "name": "insight-reloaded"}
 
 Multi-queues example
 ++++++++++++++++++++
@@ -59,7 +59,7 @@ Then you can use::
     {"insight_reloaded": "There is 14 job in the 'urgent' queue.", "number_in_queue": 14}
 
     curl -X GET http://localhost:8888/
-    {"version": "0.2dev", "insight_reloaded": "Bonjour", "name": "insight-reloaded"}
+    {"version": "1.5", "insight_reloaded": "Bonjour", "name": "insight-reloaded"}
 
 
 
@@ -67,11 +67,11 @@ Service architecture
 ====================
 
 .. image:: https://raw.github.com/novagile/insight-reloaded/master/docs/_static/InsightReloaded.png
-.. _Insight: https://github.com/novagile/insight
+.. _Insight: https://github.com/novapost/insight
 
 Server provisioning
 ===================
 
-You can find insight-reloaded chef cookbooks here : https://github.com/novagile/insight-installer
+You can find insight-reloaded chef cookbooks here : https://github.com/novapost/insight-installer
 
 This will helps you install all requirements to run your insight-reloaded server.
