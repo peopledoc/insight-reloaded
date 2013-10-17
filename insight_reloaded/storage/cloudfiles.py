@@ -10,9 +10,9 @@ from insight_reloaded.insight_settings import (CLOUDFILES_USERNAME,
 
 class CloudFilesStorage(object):
 
-    def __init__(self, document_url, cloudfiles_location=None):
+    def __init__(self, document_url, document_hash, cloudfiles_location=None):
         self.document_url = document_url
-        self.document_hash = hashlib.sha1(self.document_url).hexdigest()
+        self.document_hash = document_hash
 
         if cloudfiles_location is None:
             cloudfiles_location = "LON"

@@ -61,6 +61,15 @@ Then you can use::
     curl -X GET http://localhost:8888/
     {"version": "0.2dev", "insight_reloaded": "Bonjour", "name": "insight-reloaded"}
 
+Set hash
+++++++++
+
+By default, insight compute preview hash using url (sha1(url)). You can also send it within the request if you want, be sure that each preview has an uniq hash:
+
+::
+
+    curl -X GET "http://localhost:8888/?url=http://my_file_url.com/file.pdf&callback=http://requestb.in/12vsewg?hash=123456789"
+    {"insight_reloaded": "Job added to queue.", "number_in_queue": 14}
 
 
 Service architecture

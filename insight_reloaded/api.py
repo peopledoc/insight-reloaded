@@ -78,6 +78,11 @@ class MainHandler(tornado.web.RequestHandler):
         except ValueError:
             params['crop'] = CROP_SIZE
 
+        try:
+            params['hash'] = self.get_argument('hash')
+        except ValueError:
+            params['hash'] = hashlib.sha1(params['url']).hexdigest()
+
         message = json.dumps(params)
         c.rpush(self.queue, message, callback=self.on_response)
 

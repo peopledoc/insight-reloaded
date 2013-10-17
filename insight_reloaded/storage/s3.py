@@ -10,9 +10,11 @@ from insight_reloaded.insight_settings import (S3_ACCESS_KEY, S3_SECRET_KEY,
 
 class S3Storage(object):
 
-    def __init__(self, document_url, s3_location=None):
+    def __init__(self, document_url, document_hash, s3_location=None):
         self.document_url = document_url
-        self.document_hash = hashlib.sha1(self.document_url).hexdigest()
+
+        self.document_hash = document_hash
+
         self.conn = S3Connection(S3_ACCESS_KEY, S3_SECRET_KEY)
         self.paths = {}
 
