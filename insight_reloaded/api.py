@@ -80,7 +80,7 @@ class MainHandler(tornado.web.RequestHandler):
 
         try:
             params['hash'] = self.get_argument('hash')
-        except ValueError:
+        except:
             params['hash'] = hashlib.sha1(params['url']).hexdigest()
 
         message = json.dumps(params)
