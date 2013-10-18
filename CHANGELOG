@@ -1,10 +1,11 @@
 Changelog
 =========
 
-1.6 (unreleased)
+1.6 (2013-10-18)
 ----------------
 
-- Nothing changed yet.
+* Add support for choosen hash
+* Add a script to monitor the queue
 
 
 1.5 (2013-10-15)
