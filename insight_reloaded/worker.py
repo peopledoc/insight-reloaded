@@ -137,7 +137,7 @@ def start_worker():
 
         # Create the storage
         storage_class = resolve_name(STORAGE_CLASS)
-        storage = storage_class(params['url'])
+        storage = storage_class(params['url'], params['hash'])
 
         # Here comes the document preview engine
         preview = DocumentPreview(file_obj, callback, PREVIEW_SIZES,
