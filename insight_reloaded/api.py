@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 
@@ -69,8 +70,9 @@ class MainHandler(tornado.web.RequestHandler):
 
         # Max number of pages to compile
         try:
-            params['max_previews'] = int(self.get_argument('pages', MAX_PAGES_PREVIEW))
-        except:
+            params['max_previews'] = int(
+                self.get_argument('pages', MAX_PAGES_PREVIEW))
+        except ValueError:
             params['max_previews'] = MAX_PAGES_PREVIEW
 
         try:
@@ -80,7 +82,7 @@ class MainHandler(tornado.web.RequestHandler):
 
         try:
             params['hash'] = self.get_argument('hash')
-        except:
+        except tornado.web.MissingArgumentError:
             params['hash'] = hashlib.sha1(params['url']).hexdigest()
 
         message = json.dumps(params)

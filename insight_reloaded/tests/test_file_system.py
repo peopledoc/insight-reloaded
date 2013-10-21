@@ -20,8 +20,9 @@ class FileSystemStorageTestCase(unittest.TestCase):
         with open(self.source_file, 'wb') as f:
             f.write(self.content)
 
-        self.storage = FileSystemStorage(self.source_url, self.destination_root,
-            self.prefix_url)
+        self.storage = FileSystemStorage(self.source_url,
+                                         self.destination_root,
+                                         self.prefix_url)
 
     def tearDown(self):
         try:

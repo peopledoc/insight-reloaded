@@ -26,3 +26,5 @@
 
 # Buildout files.
 .mr.developer.cfg
+
+/*.egg/
