@@ -5,8 +5,14 @@ from tornado.testing import AsyncHTTPTestCase
 from insight_reloaded.api import application
 from insight_reloaded import __version__ as VERSION
 
+from tornado import ioloop
+
 
 class InsightApiHTTPTest(AsyncHTTPTestCase):
+
+    def get_new_ioloop(self):
+        return ioloop.IOLoop.instance()
+
     def get_app(self):
         return application
 
