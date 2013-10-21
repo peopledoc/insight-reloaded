@@ -51,21 +51,21 @@ def main():
         client = Client(dsn=SENTRY_DSN)
         while True:
             try:
-                start_worker()
+                start_worker(sys.argv)
             except Exception:
                 client.get_ident(client.captureException())
     else:
         while True:
             try:
-                start_worker()
+                start_worker(sys.argv)
             except InsightWorkerException as e:
                 sys.stderr.write('%s\n' % e)
 
 
-def start_worker():
+def start_worker(argv):
     # Init from CLI
-    worker_command = sys.argv[0]
-    argv = sys.argv[1:]
+    worker_command = argv[0]
+    argv = argv[1:]
     argc = len(argv)
 
     if argc > 1:

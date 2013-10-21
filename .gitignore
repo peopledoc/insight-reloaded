@@ -28,3 +28,4 @@
 .mr.developer.cfg
 
 /*.egg/
+.coverage
