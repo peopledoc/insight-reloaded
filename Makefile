@@ -15,7 +15,7 @@ develop: virtualenv bin_dir directories
 
 
 virtualenv:
-	if [ ! -x $(PIP) ]; then virtualenv --no-site-packages --setuptools $(VIRTUALENV_DIR); fi
+	if [ ! -x $(PIP) ]; then virtualenv $(VIRTUALENV_DIR); $(VIRTUALENV_DIR)/bin/pip install -U setuptools; fi
 
 
 bin_dir:
