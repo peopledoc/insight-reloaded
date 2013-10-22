@@ -42,5 +42,8 @@ if __name__ == '__main__':  # ``import setup`` doesn't trigger setup().
           include_package_data=True,
           zip_safe=False,
           install_requires=requirements,
-          entry_points=entry_points,
+          setup_requires=['nose'],
+          test_suite='nose.collector',
+          tests_require=['httpretty', 'nose', 'coverage'],
+          entry_points=entry_points
           )
