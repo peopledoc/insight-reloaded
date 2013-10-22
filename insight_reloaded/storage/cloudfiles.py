@@ -1,11 +1,11 @@
 from os.path import join
-import hashlib
 
 import pyrax
 pyrax.set_setting("identity_type", "rackspace")
 
-from insight_reloaded.insight_settings import (CLOUDFILES_USERNAME,
-    CLOUDFILES_API_KEY, CLOUDFILES_COUNTAINER)
+from insight_reloaded.insight_settings import (
+    CLOUDFILES_USERNAME, CLOUDFILES_API_KEY, CLOUDFILES_COUNTAINER
+)
 
 
 class CloudFilesStorage(object):
@@ -21,7 +21,8 @@ class CloudFilesStorage(object):
         pyrax.set_credentials(CLOUDFILES_USERNAME, CLOUDFILES_API_KEY)
         self.paths = {}
 
-        self.container = pyrax.cloudfiles.create_container(CLOUDFILES_COUNTAINER)
+        self.container = pyrax.cloudfiles.create_container(
+            CLOUDFILES_COUNTAINER)
 
     def prepare(self):
         """Do nothing

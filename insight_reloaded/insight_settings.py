@@ -39,7 +39,8 @@ DESTINATION_ROOT = getattr(settings, 'DESTINATION_ROOT',
 SENTRY_DSN = getattr(settings, 'SENTRY_DSN', None)
 
 STORAGE_CLASS = getattr(settings, 'STORAGE_CLASS',
-    'insight_reloaded.storage.file_system:FileSystemStorage') # FS or S3
+                        'insight_reloaded.storage.file_system:'
+                        'FileSystemStorage')  # FS or S3
 
 # Amazon S3
 
@@ -51,4 +52,5 @@ S3_BUCKET_NAME = getattr(settings, 'S3_BUCKET_NAME', 'insight-previews-test')
 
 CLOUDFILES_USERNAME = getattr(settings, 'CLOUDFILES_USERNAME', None)
 CLOUDFILES_API_KEY = getattr(settings, 'CLOUDFILES_API_KEY', None)
-CLOUDFILES_COUNTAINER = getattr(settings, 'CLOUDFILES_COUNTAINER', 'insight-previews-test')
+CLOUDFILES_COUNTAINER = getattr(settings, 'CLOUDFILES_COUNTAINER',
+                                'insight-previews-test')

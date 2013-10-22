@@ -1,13 +1,13 @@
 from os import makedirs
 from os.path import join
-from shutil import rmtree, move
-import hashlib
+from shutil import move
 from insight_reloaded.insight_settings import (DESTINATION_ROOT, PREFIX_URL)
 
 
 class FileSystemStorage(object):
 
-    def __init__(self, document_url, document_hash, destination_root=None, prefix_url=None):
+    def __init__(self, document_url, document_hash, destination_root=None,
+                 prefix_url=None):
         if not destination_root:
             destination_root = DESTINATION_ROOT
         self.destination_root = destination_root
@@ -23,7 +23,8 @@ class FileSystemStorage(object):
         """Create a unique identifier for the document, create the path
         and return it.
         """
-        document_path = join(self.destination_root, string_to_folder_path(self.document_hash))
+        document_path = join(self.destination_root,
+                             string_to_folder_path(self.document_hash))
         try:
             makedirs(document_path)
         except OSError:
@@ -38,7 +39,7 @@ class FileSystemStorage(object):
 
     def get_base_document_url(self):
         return self.destination_folder.replace(self.destination_root,
-            self.prefix_url)
+                                               self.prefix_url)
 
 
 def string_to_folder_path(s):

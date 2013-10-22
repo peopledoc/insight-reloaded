@@ -12,9 +12,8 @@ from insight_reloaded.preview import (DocumentPreview,
 from insight_reloaded.insight_settings import (
     REDIS_HOST, REDIS_PORT, REDIS_DB, SENTRY_DSN, REDIS_QUEUE_KEYS,
     DEFAULT_REDIS_QUEUE_KEY, ALLOWED_EXTENSIONS, TEMP_DIRECTORY, CROP_SIZE,
-    DESTINATION_ROOT, PREVIEW_SIZES, PREFIX_URL, DOCVIEWER_SUFFIX,
-    STORAGE_CLASS, S3_ACCESS_KEY, S3_SECRET_KEY, S3_BUCKET_NAME)
-from utils import ImportStringError, resolve_name
+    PREVIEW_SIZES, DOCVIEWER_SUFFIX, STORAGE_CLASS)
+from utils import resolve_name
 
 try:
     from raven import Client

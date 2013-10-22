@@ -1,11 +1,11 @@
 from os.path import join
-import hashlib
 
 from boto.s3.connection import S3Connection, Location
 from boto.s3.key import Key
 from boto.exception import S3ResponseError
-from insight_reloaded.insight_settings import (S3_ACCESS_KEY, S3_SECRET_KEY,
-    S3_BUCKET_NAME)
+from insight_reloaded.insight_settings import (
+    S3_ACCESS_KEY, S3_SECRET_KEY, S3_BUCKET_NAME
+)
 
 
 class S3Storage(object):
@@ -27,7 +27,8 @@ class S3Storage(object):
             if e.status != 404:
                 raise
 
-            self.bucket = self.conn.create_bucket(self.bucket, location=s3_location)
+            self.bucket = self.conn.create_bucket(self.bucket,
+                                                  location=s3_location)
 
     def prepare(self):
         """Do nothing

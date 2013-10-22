@@ -25,13 +25,12 @@ bin_dir:
 
 
 directories:
-	mkdir -p $(DATA_DIR)/test
+	mkdir -p $(DATA_DIR)
 
 
 clean:
 	find $(ROOT_DIR)/ -name "*.pyc" -delete
 	find $(ROOT_DIR)/ -name ".noseids" -delete
-	find $(ROOT_DIR)/ -name ".coverage" -delete
 
 
 distclean: clean
@@ -44,7 +43,9 @@ maintainer-clean: distclean
 
 
 test:
-	$(VIRTUALENV_DIR)/bin/python setup.py test
+	$(VIRTUALENV_DIR)/bin/pip install -r test-requirements.txt
+	$(VIRTUALENV_DIR)/bin/flake8 insight_reloaded
+	$(NOSE) --config=nose.cfg --xcoverage-file=$(DATA_DIR)/insight_reloaded.coverage.xml
 
 
 doc:
