@@ -1,5 +1,5 @@
 # Local binaries (they are generated).
-/bin/
+/bin
 
 # Local configuration (generated from templates)...
 /etc/
