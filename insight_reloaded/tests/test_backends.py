@@ -38,9 +38,10 @@ class InsightWorkerTest(unittest.TestCase):
         httpretty.register_uri(httpretty.POST, "http://requestb.in/",
                                body="ok")
 
-        # start_worker
+        # start_worker and patch settings
         httpretty.enable()
-        with patch('insight_reloaded.worker.redis', redis_client):
+        with patch('insight_reloaded.worker.redis', redis_client), \
+              patch('insight_reloaded.worker.STORAGE_CLASS', 'insight_reloaded.storage.file_system:FileSystemStorage'):
             try:
                 start_worker(['insight_worker'])
             except SystemExit:
