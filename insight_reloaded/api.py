@@ -1,6 +1,5 @@
 import hashlib
 import json
-import os
 
 import tornadoredis
 from tornado import web, ioloop, gen
@@ -18,10 +17,9 @@ except ImportError:
         print "SENTRY_DSN is defined but raven isn't installed."
 
 
-HERE = os.path.dirname(os.path.abspath(__file__))
 try:
-    with open(os.path.join(HERE, '../VERSION')) as f:
-        VERSION = f.readlines()[0].strip()
+    from insight_reloaded import __version__
+    VERSION = __version__
 except IOError:
     VERSION = 'N/A'
 
