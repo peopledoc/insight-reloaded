@@ -4,7 +4,8 @@ import pyrax
 pyrax.set_setting("identity_type", "rackspace")
 
 from insight_reloaded.insight_settings import (
-    CLOUDFILES_USERNAME, CLOUDFILES_API_KEY, CLOUDFILES_COUNTAINER
+    CLOUDFILES_USERNAME, CLOUDFILES_API_KEY, CLOUDFILES_COUNTAINER,
+    CLOUDFILES_SERVICENET
 )
 
 
@@ -21,7 +22,9 @@ class CloudFilesStorage(object):
         pyrax.set_credentials(CLOUDFILES_USERNAME, CLOUDFILES_API_KEY)
         self.paths = {}
 
-        self.container = pyrax.cloudfiles.create_container(
+        self.client = pyrax.connect_to_cloudfiles(cloudfiles_location,
+                                                  public=not CLOUDFILES_SERVICENET)
+        self.container = self.client.cloudfiles.create_container(
             CLOUDFILES_COUNTAINER)
 
     def prepare(self):
