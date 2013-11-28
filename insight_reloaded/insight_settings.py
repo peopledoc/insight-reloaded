@@ -54,3 +54,4 @@ CLOUDFILES_USERNAME = getattr(settings, 'CLOUDFILES_USERNAME', None)
 CLOUDFILES_API_KEY = getattr(settings, 'CLOUDFILES_API_KEY', None)
 CLOUDFILES_COUNTAINER = getattr(settings, 'CLOUDFILES_COUNTAINER',
                                 'insight-previews-test')
+CLOUDFILES_SERVICENET = getattr(settings, 'CLOUDFILES_SERVICENET', False)
