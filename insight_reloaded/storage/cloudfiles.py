@@ -22,8 +22,8 @@ class CloudFilesStorage(object):
         pyrax.set_credentials(CLOUDFILES_USERNAME, CLOUDFILES_API_KEY)
         self.paths = {}
 
-        self.client = pyrax.connect_to_cloudfiles(cloudfiles_location,
-                                                  public=not CLOUDFILES_SERVICENET)
+        self.client = pyrax.connect_to_cloudfiles(
+            cloudfiles_location, public=not CLOUDFILES_SERVICENET)
         self.container = self.client.cloudfiles.create_container(
             CLOUDFILES_COUNTAINER)
 
