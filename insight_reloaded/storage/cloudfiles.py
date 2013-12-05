@@ -24,8 +24,7 @@ class CloudFilesStorage(object):
 
         self.client = pyrax.connect_to_cloudfiles(
             cloudfiles_location, public=not CLOUDFILES_SERVICENET)
-        self.container = self.client.cloudfiles.create_container(
-            CLOUDFILES_COUNTAINER)
+        self.container = self.client.create_container(CLOUDFILES_COUNTAINER)
 
     def prepare(self):
         """Do nothing
