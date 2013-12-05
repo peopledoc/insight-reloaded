@@ -1,10 +1,10 @@
 Changelog
 =========
 
-1.7 (unreleased)
-----------------
+1.6.5 (2013-12-05)
+------------------
 
-- Nothing changed yet.
+- Hotfix the cloudfiles storage backend.
 
 
 1.6.4 (2013-12-05)
