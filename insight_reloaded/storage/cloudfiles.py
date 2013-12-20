@@ -19,7 +19,8 @@ class CloudFilesStorage(object):
             cloudfiles_location = "LON"
 
         pyrax.set_default_region(cloudfiles_location)
-        pyrax.set_credentials(CLOUDFILES_USERNAME, CLOUDFILES_API_KEY)
+        pyrax.set_credentials(CLOUDFILES_USERNAME, CLOUDFILES_API_KEY,
+                              region=cloudfiles_location)
         self.paths = {}
 
         self.client = pyrax.connect_to_cloudfiles(
