@@ -5,6 +5,7 @@ import requests
 import os
 from tempfile import NamedTemporaryFile
 import mimetypes
+import traceback
 import sys
 
 from insight_reloaded.preview import (DocumentPreview,
@@ -57,8 +58,8 @@ def main():
         while True:
             try:
                 start_worker(sys.argv)
-            except InsightWorkerException as e:
-                sys.stderr.write('%s\n' % e)
+            except InsightWorkerException:
+                traceback.print_exc()
 
 
 def start_worker(argv):
