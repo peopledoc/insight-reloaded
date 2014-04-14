@@ -45,7 +45,7 @@ maintainer-clean: distclean
 test:
 	$(VIRTUALENV_DIR)/bin/pip install -r test-requirements.txt
 	$(VIRTUALENV_DIR)/bin/flake8 insight_reloaded
-	$(NOSE) --config=nose.cfg --xcoverage-file=$(DATA_DIR)/insight_reloaded.coverage.xml
+	$(NOSE) --config=nose.cfg --xcoverage-file=$(DATA_DIR)/insight_reloaded.coverage.xml --xunit-file=$(DATA_DIR)/insight_reloaded.junit.xml
 
 
 doc:
