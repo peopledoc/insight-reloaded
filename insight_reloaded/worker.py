@@ -97,9 +97,8 @@ def start_worker(argv):
 
         # Downloading file
         try:
-            r = requests.get(params['url'], verify=False)  # No need
-                                                           # to verify
-                                                           # SSL
+            # No need to verify SSL
+            r = requests.get(params['url'], verify=False)
         except requests.exceptions.ConnectionError, e:
             abort(e, params['url'], callback)
 
