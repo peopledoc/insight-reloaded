@@ -15,7 +15,7 @@ version = read_relative_file('VERSION').strip()
 readme = read_relative_file('README')
 requirements = ['setuptools', 'tornado', 'tornado-redis',
                 'requests', 'redis', 'raven<5.0.0', 'boto',
-                'pyrax']
+                'pyrax<1.8.0']
 entry_points = {'console_scripts':
                 ['insight_api = insight_reloaded.api:main',
                  'insight = insight_reloaded.worker:main',
