@@ -5,7 +5,7 @@ pyrax.set_setting("identity_type", "rackspace")
 
 from insight_reloaded.insight_settings import (
     CLOUDFILES_USERNAME, CLOUDFILES_API_KEY, CLOUDFILES_COUNTAINER,
-    CLOUDFILES_SERVICENET
+    CLOUDFILES_SERVICENET, CLOUDFILES_DEFAULT_REGION
 )
 
 
@@ -16,7 +16,7 @@ class CloudFilesStorage(object):
         self.document_hash = document_hash
 
         if cloudfiles_location is None:
-            cloudfiles_location = "LON"
+            cloudfiles_location = CLOUDFILES_DEFAULT_REGION
 
         pyrax.set_default_region(cloudfiles_location)
         pyrax.set_credentials(CLOUDFILES_USERNAME, CLOUDFILES_API_KEY,
