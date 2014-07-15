@@ -7,6 +7,7 @@ from insight_reloaded.insight_settings import (
     CLOUDFILES_USERNAME, CLOUDFILES_API_KEY, CLOUDFILES_COUNTAINER,
     CLOUDFILES_SERVICENET, CLOUDFILES_DEFAULT_REGION
 )
+from insight_reloaded.preview import PreviewException
 
 
 class CloudFilesStorage(object):
@@ -25,6 +26,10 @@ class CloudFilesStorage(object):
 
         self.client = pyrax.connect_to_cloudfiles(
             cloudfiles_location, public=not CLOUDFILES_SERVICENET)
+        if self.client is None:
+            err_msg = ('Error during connection to cloudfiles, region {0} is'
+                       ' likely to be wrong.'.format(cloudfiles_location))
+            raise PreviewException(err_msg)
         self.container = self.client.create_container(CLOUDFILES_COUNTAINER)
 
     def prepare(self):
